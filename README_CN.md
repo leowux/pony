@@ -198,4 +198,4 @@ node dist/cli/index.mjs <命令>
 
 ## 许可证
 
-MIT © wuwenbang
+MIT © leowux
