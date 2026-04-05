@@ -7,6 +7,16 @@ dist/
 # Pony data directory (user-specific)
 .pony/
 
+# OMC runtime state
+.omc/
+
+# OMC dev tools
+.claude-plugin/
+agents/
+hooks/
+scripts/
+skills/
+
 # IDE
 .vscode/
 .idea/
