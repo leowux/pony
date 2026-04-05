@@ -1,136 +1,165 @@
-# Pony CLI
+# Pony
 
-Lightweight task management for Claude Code sessions.
+[![npm version](https://img.shields.io/npm/v/pony-cli.svg)](https://www.npmjs.com/package/pony-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**Pony** is a task management plugin for [Claude Code](https://claude.ai/code) sessions. It provides file-based task storage with dependency tracking, status transitions, and a real-time HUD (Heads-Up Display) for statusline rendering.
+
+[中文文档](./README_CN.md)
+
+## Features
+
+- **Task Management** - Create, track, and manage tasks with priorities, dependencies, and tags
+- **HUD Statusline** - Real-time visualization of session state, task progress, and agent activity
+- **Agent Routing** - Automatic task delegation to specialized agents based on tags
+- **CLI + Plugin** - Use standalone CLI or integrate with Claude Code as a plugin
+- **Global Storage** - All data stored in `~/.pony/` for cross-project access
 
 ## Installation
 
+### As Claude Code Plugin
+
 ```bash
+# Add Pony as a local marketplace
+claude plugin marketplace add /path/to/pony --scope user
+
+# Install the plugin
+claude plugin install pony@pony
+```
+
+### As Standalone CLI
+
+```bash
+# Use directly with npx (no installation required)
+npx pony-cli init
+
+# Or install globally
 npm install -g pony-cli
 ```
 
-## Usage
+## Quick Start
 
 ```bash
-pony <command> [options]
+# Initialize Pony
+pony init
+
+# Create a task
+pony add "Implement authentication" -p high -t implement
+
+# List all tasks
+pony list
+
+# Get next ready task
+pony next
+
+# Update task status
+pony update task_20260405_123456_789 -s running
 ```
 
-## Commands
+## CLI Commands
 
-### Task Management
+### Task Commands
 
-#### `pony add <title>`
+| Command | Description |
+|---------|-------------|
+| `pony add <title>` | Create a new task |
+| `pony list` | List all tasks with summary |
+| `pony get <taskId>` | Show task details |
+| `pony update <taskId>` | Update task properties |
+| `pony delete [taskId]` | Delete task or bulk delete completed |
+| `pony next` | Get next task ready to start |
 
-Create a new task.
+### System Commands
 
-Options:
+| Command | Description |
+|---------|-------------|
+| `pony init` | Initialize Pony storage |
+| `pony hud [action]` | Manage HUD statusline |
+| `pony logs` | View logs with filtering |
 
-- `-p, --priority <priority>` - Task priority (high, medium, low), default: medium
-- `-d, --depends-on <taskIds...>` - Task dependencies (space-separated IDs)
-- `-t, --tag <tags...>` - Task tags (space-separated)
-- `-o, --owner <owner>` - Task owner/agent
-- `--desc <description>` - Task description
-- `--project <path>` - Project path, default: current directory
+### Task Options
 
-Example:
+**`pony add`**
+- `-p, --priority <level>` - Priority: `high`, `medium`, `low`
+- `-d, --depends-on <ids>` - Dependency task IDs
+- `-t, --tag <tags>` - Tags for agent routing
+- `-o, --owner <name>` - Assign owner
+- `--desc <text>` - Task description
+- `--project <path>` - Project association
 
-```bash
-pony add "Fix login bug" -p high -t bug auth
-```
-
-#### `pony list`
-
-List all tasks with progress summary.
-
-Options:
-
+**`pony list`**
 - `-s, --status <status>` - Filter by status
-- `-o, --owner <owner>` - Filter by owner
-- `-p, --project <name>` - Filter by project name
-- `--json` - Output as JSON
+- `-o, --owner <name>` - Filter by owner
+- `-p, --project <name>` - Filter by project
+- `--summary` - Show statistics only
+- `--json` - JSON output
 
-#### `pony get <taskId>`
-
-Show task details.
-
-#### `pony update <taskId>`
-
-Update task properties.
-
-Options:
-
+**`pony update`**
 - `-s, --status <status>` - New status
-- `-p, --priority <priority>` - New priority
+- `-p, --priority <level>` - New priority
 - `-t, --title <title>` - New title
-- `--owner <owner>` - New owner
+- `--owner <name>` - New owner
 
-#### `pony start <taskId>`
+### Task Status Transitions
 
-Start working on a task.
+| From | To |
+|------|-----|
+| `pending` | `running`, `cancelled` |
+| `running` | `completed`, `pending`, `cancelled` |
+| `completed` | `pending` (reopen) |
+| `cancelled` | `pending` (reactivate) |
 
-Options:
+## HUD Statusline
 
-- `--owner <owner>` - Assign owner
+Pony provides a two-line HUD for Claude Code statusline:
 
-#### `pony complete <taskId>`
+```
+[Pony] | session: 15m | ctx: 45% | agents: 2 | tools: 12 | skills: 1
+tasks: 5 total | pending: 2 | running: 1 | completed: 2
+```
 
-Mark a task as completed.
+### Color Gradients
 
-#### `pony cancel <taskId>`
+| Element | Levels |
+|---------|--------|
+| Session | Gray → Green (15m) → Blue (30m) → Yellow (45m) → Magenta (60m) → Red (>60m) |
+| Context | Gray (0%) → Green (35%) → Blue (50%) → Yellow (65%) → Magenta (80%) → Red (>80%) |
+| Agents | Green (1) → Blue (2) → Yellow (3) → Magenta (4) → Red (5+) |
+| Tools | Green (1-9) → Blue (10-49) → Yellow (50-99) → Magenta (100-199) → Red (200+) |
 
-Cancel a task.
+### HUD Commands
 
-#### `pony delete <taskId>`
+```bash
+pony hud on      # Enable HUD
+pony hud off     # Disable HUD
+pony hud status  # Show configuration
+```
 
-Delete a task permanently.
+## Agent Routing
 
-### Status & Navigation
+Tasks are automatically routed to specialized agents based on tags:
 
-#### `pony status`
+| Tag | Agent | Model | Use Case |
+|-----|-------|-------|----------|
+| `plan`, `design`, `architecture` | planner | opus | Planning, requirements |
+| `search`, `find`, `explore` | explorer | haiku | Code search |
+| `verify`, `test`, `review` | verifier | sonnet | Testing, validation |
+| `implement`, `code`, `fix` | executor | sonnet | Implementation |
 
-Show task system status summary.
+### Default Pipeline
 
-Options:
+Tasks without special tags follow: **planner → executor → verifier**
 
-- `-p, --project <path>` - Project path, default: current directory
+## Plugin Skills
 
-#### `pony next`
+When installed as a Claude Code plugin, Pony provides these skills:
 
-Show the next task ready to start (considering dependencies).
-
-### Cleanup
-
-#### `pony clear`
-
-Clear all completed tasks.
-
-#### `pony cleanup`
-
-Clean up old logs and cache.
-
-### HUD
-
-#### `pony hud`
-
-Run the HUD statusline for Claude Code.
-
-### Logs
-
-#### `pony logs`
-
-View logs.
-
-Options:
-
-- `-f, --follow` - Follow log output (tail -f style)
-- `-l, --level <level>` - Filter by log level (debug, info, warn, error)
-- `-n, --lines <number>` - Number of lines to show, default: 50
-- `--clean` - Clean old log files
-
-### Help
-
-#### `pony help [command]`
-
-Show help for a command or general help.
+| Skill | Description |
+|-------|-------------|
+| `/pony:init` | Initialize Pony for current session |
+| `/pony:task` | Task management operations |
+| `/pony:hud` | HUD configuration |
+| `/pony:run` | Execute task orchestration loop |
 
 ## Data Storage
 
@@ -139,28 +168,34 @@ All data is stored globally in `~/.pony/`:
 ```
 ~/.pony/
 ├── tasks/
-│   ├── index.json    # nextId counter
-│   ├── 1.json        # task files
-│   └── 2.json
-└── state/
-    └── hud-state.json
+│   ├── index.json           # Task count, projects
+│   └── task_YYYYMMDD_HHMMSS_mmm/
+│       ├── task.json        # Task definition
+│       └── state.json       # Task state
+├── hud/
+│   └── state.json           # HUD session state
+├── logs/
+│   └── pony-YYYY-MM-DD.log  # Daily logs
+├── config.json              # Configuration
+└── cache/                   # Cache directory
 ```
-
-## Global Options
-
-- `--debug` - Enable debug logging
-- `--version` - Show version
-- `--help` - Show help
 
 ## Development
 
 ```bash
-pnpm install       # Install dependencies
-pnpm build         # Build library/CLI
-pnpm test          # Run tests
-pnpm check         # Format + lint + typecheck
+pnpm install     # Install dependencies
+pnpm build       # Build library/CLI
+pnpm test        # Run tests
+pnpm check       # Format + lint + typecheck
+pnpm clean       # Remove dist/
+```
+
+Run CLI locally:
+
+```bash
+node dist/cli/index.mjs <command>
 ```
 
 ## License
 
-MIT
+MIT © wuwenbang

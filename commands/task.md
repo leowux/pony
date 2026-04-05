@@ -1,132 +1,133 @@
 # Pony Task Commands
 
-Pony 提供以下任务管理命令：
+Pony provides the following task management commands:
 
-## 命令列表
+## Command List
 
-### `pony add <title>` - 创建任务
+### `pony add <title>` - Create Task
 
-创建一个新任务。
+Create a new task.
 
 ```bash
-pony add "任务标题" --priority high --tag implement
+pony add "Task title" --priority high --tag implement
 ```
 
-选项：
+Options:
 
-- `-p, --priority <priority>` - 优先级 (high, medium, low)
-- `-t, --tag <tags...>` - 标签
-- `-o, --owner <owner>` - 负责人
-- `--desc <description>` - 描述
+- `-p, --priority <priority>` - Priority (high, medium, low)
+- `-t, --tag <tags...>` - Tags
+- `-o, --owner <owner>` - Owner
+- `--desc <description>` - Description
 
-### `pony list` - 列出任务
+### `pony list` - List Tasks
 
-以表格形式显示所有任务。
+Display all tasks in table format.
 
 ```bash
 pony list --status pending --summary
 ```
 
-选项：
+Options:
 
-- `-s, --status <status>` - 按状态筛选
-- `-o, --owner <owner>` - 按负责人筛选
-- `--summary` - 显示统计信息
-- `--json` - JSON 格式输出
+- `-s, --status <status>` - Filter by status
+- `-o, --owner <owner>` - Filter by owner
+- `-p, --project <name>` - Filter by project name
+- `--summary` - Show statistics only
+- `--json` - JSON output
 
-### `pony get <taskId>` - 查看详情
+### `pony get <taskId>` - View Details
 
-显示任务的详细信息。
+Display detailed task information.
 
 ```bash
 pony get task_20260405_xxx
 ```
 
-### `pony update <taskId>` - 更新任务
+### `pony update <taskId>` - Update Task
 
-更新任务属性，包括状态切换。
+Update task properties, including status transitions.
 
 ```bash
 pony update task_xxx --status running
 pony update task_xxx --priority high
 ```
 
-选项：
+Options:
 
-- `-s, --status <status>` - 状态 (pending, running, completed, cancelled)
-- `-p, --priority <priority>` - 优先级
-- `-t, --title <title>` - 标题
-- `--owner <owner>` - 负责人
+- `-s, --status <status>` - Status (pending, running, completed, cancelled)
+- `-p, --priority <priority>` - Priority
+- `-t, --title <title>` - Title
+- `--owner <owner>` - Owner
 
-状态转换规则：
+Status Transition Rules:
 
 - pending → running, cancelled
 - running → completed, pending, cancelled
-- completed → pending (重开)
-- cancelled → pending (激活)
+- completed → pending (reopen)
+- cancelled → pending (activate)
 
-### `pony delete [taskId]` - 删除任务
+### `pony delete [taskId]` - Delete Task
 
-删除单个任务或批量删除。
+Delete a single task or bulk delete.
 
 ```bash
 pony delete task_xxx
 pony delete --completed
 ```
 
-选项：
+Options:
 
-- `--completed` - 删除所有已完成任务
+- `--completed` - Delete all completed tasks
 
-### `pony next` - 下一个任务
+### `pony next` - Next Task
 
-获取下一个待处理的任务。
+Get the next pending task ready to process.
 
 ```bash
 pony next --json
 ```
 
-选项：
+Options:
 
-- `--json` - JSON 格式输出
+- `--json` - JSON output
 
-## 任务状态
+## Task Status
 
-| 状态      | 颜色 | 说明   |
-| --------- | ---- | ------ |
-| pending   | 黄色 | 待处理 |
-| running   | 蓝色 | 进行中 |
-| completed | 绿色 | 已完成 |
-| cancelled | 灰色 | 已取消 |
+| Status    | Color  | Description |
+| --------- | ------ | ----------- |
+| pending   | Yellow | Pending     |
+| running   | Blue   | In Progress |
+| completed | Green  | Completed   |
+| cancelled | Gray   | Cancelled   |
 
-## 任务优先级
+## Task Priority
 
-| 优先级 | 颜色 |
-| ------ | ---- |
-| high   | 红色 |
-| medium | 黄色 |
-| low    | 蓝色 |
+| Priority | Color  |
+| -------- | ------ |
+| high     | Red    |
+| medium   | Yellow |
+| low      | Blue   |
 
-## 快捷操作
+## Quick Operations
 
 ```bash
-# 创建并开始
-pony add "紧急修复" -p high && pony update $(pony next --json | jq -r '.id') -s running
+# Create and start
+pony add "Urgent fix" -p high && pony update $(pony next --json | jq -r '.id') -s running
 
-# 完成当前任务
+# Complete current task
 pony update $(pony next --json | jq -r '.id') -s completed
 
-# 清理已完成
+# Cleanup completed
 pony delete --completed
 ```
 
-## 数据存储
+## Data Storage
 
-所有任务存储在 `~/.pony/tasks/` 目录。
+All tasks are stored in `~/.pony/tasks/` directory.
 
 ```
 ~/.pony/tasks/
 ├── task_20260405_xxx/
-│   ├── task.json      # 任务数据
-│   └── state.json     # 状态数据
+│   ├── task.json      # Task data
+│   └── state.json     # State data
 ```

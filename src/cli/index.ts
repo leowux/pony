@@ -438,7 +438,10 @@ program
       console.log('  pony list                   # List all tasks');
       console.log('  pony next                   # Get next task');
       console.log();
-      console.log(chalk.gray('Install globally with: npm install -g pony-cli'));
+      console.log(chalk.bold('Install globally:'));
+      console.log(chalk.cyan('  npm install -g pony-cli'));
+      console.log(chalk.gray('  # or'));
+      console.log(chalk.cyan('  pnpm add -g pony-cli'));
     } catch (error) {
       console.error(
         chalk.red(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`),
