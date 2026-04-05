@@ -20,11 +20,11 @@
 ### 作为 Claude Code 插件
 
 ```bash
-# 将 Pony 添加为本地市场
-claude plugin marketplace add /path/to/pony --scope user
+# 添加 Pony 市场
+claude plugin marketplace add https://github.com/leowux/pony --scope user
 
 # 安装插件
-claude plugin install pony@pony
+claude plugin install pony
 ```
 
 ### 作为独立 CLI

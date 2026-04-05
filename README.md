@@ -20,11 +20,11 @@
 ### As Claude Code Plugin
 
 ```bash
-# Add Pony as a local marketplace
-claude plugin marketplace add /path/to/pony --scope user
+# Add Pony marketplace
+claude plugin marketplace add https://github.com/leowux/pony --scope user
 
 # Install the plugin
-claude plugin install pony@pony
+claude plugin install pony
 ```
 
 ### As Standalone CLI
