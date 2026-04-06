@@ -23,7 +23,7 @@
   "type": "module",
   "main": "dist/index.mjs",
   "scripts": {
-    "build": "vp pack",
+    "build": "vp pack src/index.ts src/cli/index.ts --dts --sourcemap --clean --deps.never-bundle zod --deps.never-bundle chalk --deps.never-bundle commander",
     "dev": "vp pack --watch",
     "test": "vp test",
     "lint": "vp lint",
