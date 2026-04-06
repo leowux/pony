@@ -134,6 +134,7 @@ export interface PonyHudElementConfig {
   sessionDuration: boolean;
   agents: boolean;
   context: boolean;
+  tokens: boolean;
 }
 
 // ─── HUD Render Context ───────────────────────────────────────────────────────
@@ -155,8 +156,18 @@ export interface PonyHudContext {
   activeToolsCount: number;
   /** Active skills count (from transcript) */
   activeSkillsCount: number;
+  /** Cumulative input tokens */
+  inputTokens: number;
+  /** Cumulative output tokens */
+  outputTokens: number;
+  /** Cumulative cache creation tokens */
+  cacheCreationTokens: number;
+  /** Cumulative cache read tokens */
+  cacheReadTokens: number;
   /** Working directory */
   cwd: string;
+  /** Git branch name */
+  branchName: string | null;
   /** HUD state */
   hudState?: PonyHudState;
 }
@@ -208,6 +219,38 @@ export const DEFAULT_GLOBAL_CONFIG: PonyGlobalConfig = {
   maxTasks: 1000,
 };
 
+// ─── Todo Types ────────────────────────────────────────────────────────────────
+
+/**
+ * A simple todo item for quick checklist management.
+ */
+export interface Todo {
+  /** Unique todo ID (format: todo_XXX) */
+  id: string;
+  /** Todo text content */
+  text: string;
+  /** Completion status */
+  completed: boolean;
+  /** Creation timestamp (ISO) */
+  createdAt: string;
+  /** Optional list ID for grouping */
+  listId?: string;
+}
+
+/**
+ * Todo list containing multiple todo items.
+ */
+export interface TodoList {
+  /** List name */
+  name: string;
+  /** List ID (default: 'default') */
+  id: string;
+  /** Todos in this list */
+  todos: Todo[];
+  /** Last update timestamp (ISO) */
+  updatedAt: string;
+}
+
 // ─── Default Configuration ────────────────────────────────────────────────────
 
 export const DEFAULT_PONY_CONFIG: PonyConfig = {
@@ -221,6 +264,7 @@ export const DEFAULT_PONY_CONFIG: PonyConfig = {
       sessionDuration: true,
       agents: true,
       context: true,
+      tokens: true,
     },
     maxOutputLines: 3,
   },
@@ -228,5 +272,41 @@ export const DEFAULT_PONY_CONFIG: PonyConfig = {
     maxTasks: 100,
     autoComplete: false,
     defaultPriority: 'medium',
+  },
+};
+
+// ─── HUD Preset Configurations ─────────────────────────────────────────────────
+
+/**
+ * Preset configurations for HUD elements.
+ * Each preset defines which elements are visible.
+ */
+export const PRESET_CONFIGS: Record<PonyConfig['hud']['preset'], Partial<PonyHudElementConfig>> = {
+  minimal: {
+    ponyLabel: true,
+    tasks: false,
+    currentTask: false,
+    sessionDuration: false,
+    agents: false,
+    context: true, // Always show context for safety
+    tokens: false,
+  },
+  focused: {
+    ponyLabel: true,
+    tasks: true,
+    currentTask: true,
+    sessionDuration: true,
+    agents: true,
+    context: true,
+    tokens: true,
+  },
+  full: {
+    ponyLabel: true,
+    tasks: true,
+    currentTask: true,
+    sessionDuration: true,
+    agents: true,
+    context: true,
+    tokens: true,
   },
 };
