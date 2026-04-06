@@ -1,3 +1,8 @@
+---
+description: Run task orchestration with full agent pipeline
+argument-hint: '[--max-iterations <n>] [--skip-verify]'
+---
+
 Run task orchestration with full agent pipeline.
 
 ## Usage
@@ -22,20 +27,20 @@ Repeat until no pending tasks:
 
 ## Agent Routing
 
-| Tag                                   | Agent    | Model  | Use Case                             |
-| ------------------------------------- | -------- | ------ | ------------------------------------ |
-| `plan`, `design`, `architecture`      | planner  | opus   | Planning, requirements, architecture |
-| `search`, `find`, `explore`           | explorer | haiku  | Code search, discovery               |
-| `verify`, `test`, `review`            | verifier | sonnet | Testing, validation, review          |
-| `implement`, `code`, `fix` or no tags | executor | sonnet | Implementation, bug fixes            |
+| Tag                                   | Agent         | Model  | Use Case                             |
+| ------------------------------------- | ------------- | ------ | ------------------------------------ |
+| `plan`, `design`, `architecture`      | pony:planner  | opus   | Planning, requirements, architecture |
+| `search`, `find`, `explore`           | pony:explorer | haiku  | Code search, discovery               |
+| `verify`, `test`, `review`            | pony:verifier | sonnet | Testing, validation, review          |
+| `implement`, `code`, `fix` or no tags | pony:executor | sonnet | Implementation, bug fixes            |
 
 ### Default Pipeline
 
-If no special tags, use **planner → executor → verifier**:
+If no special tags, use **pony:planner → pony:executor → pony:verifier**:
 
-1. **planner** - Analyze task and create implementation plan
-2. **executor** - Implement the plan
-3. **verifier** - Verify the implementation works
+1. **pony:planner** - Analyze task and create implementation plan
+2. **pony:executor** - Implement the plan
+3. **pony:verifier** - Verify the implementation works
 
 ## Implementation
 
@@ -43,7 +48,7 @@ Use Agent tool to delegate:
 
 ```
 Agent(
-  subagent_type="planner",
+  subagent_type="pony:planner",
   description="Plan task",
   prompt="Plan implementation for task #<id>: <title>
 
@@ -53,7 +58,7 @@ Analyze requirements and create a step-by-step implementation plan."
 )
 ```
 
-After planner completes, call executor with the plan, then verifier.
+After pony:planner completes, call pony:executor with the plan, then pony:verifier.
 
 ## Task Tags
 
@@ -70,12 +75,12 @@ pony add "Design new architecture" -t plan
 
 Single task execution:
 
-- Task with `verify` tag → goes directly to verifier agent
+- Task with `verify` tag → goes directly to pony:verifier agent
 
 Full pipeline:
 
-- Task with no tags → planner → executor → verifier
+- Task with no tags → pony:planner → pony:executor → pony:verifier
 
 Skip planning:
 
-- Task with `implement` tag → goes directly to executor → verifier
+- Task with `implement` tag → goes directly to pony:executor → pony:verifier

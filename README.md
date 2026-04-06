@@ -60,26 +60,27 @@ pony update task_20260405_123456_789 -s running
 
 ### Task Commands
 
-| Command | Description |
-|---------|-------------|
-| `pony add <title>` | Create a new task |
-| `pony list` | List all tasks with summary |
-| `pony get <taskId>` | Show task details |
-| `pony update <taskId>` | Update task properties |
+| Command                | Description                          |
+| ---------------------- | ------------------------------------ |
+| `pony add <title>`     | Create a new task                    |
+| `pony list`            | List all tasks with summary          |
+| `pony get <taskId>`    | Show task details                    |
+| `pony update <taskId>` | Update task properties               |
 | `pony delete [taskId]` | Delete task or bulk delete completed |
-| `pony next` | Get next task ready to start |
+| `pony next`            | Get next task ready to start         |
 
 ### System Commands
 
-| Command | Description |
-|---------|-------------|
-| `pony init` | Initialize Pony storage |
-| `pony hud [action]` | Manage HUD statusline |
-| `pony logs` | View logs with filtering |
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `pony init`         | Initialize Pony storage  |
+| `pony hud [action]` | Manage HUD statusline    |
+| `pony logs`         | View logs with filtering |
 
 ### Task Options
 
 **`pony add`**
+
 - `-p, --priority <level>` - Priority: `high`, `medium`, `low`
 - `-d, --depends-on <ids>` - Dependency task IDs
 - `-t, --tag <tags>` - Tags for agent routing
@@ -88,6 +89,7 @@ pony update task_20260405_123456_789 -s running
 - `--project <path>` - Project association
 
 **`pony list`**
+
 - `-s, --status <status>` - Filter by status
 - `-o, --owner <name>` - Filter by owner
 - `-p, --project <name>` - Filter by project
@@ -95,6 +97,7 @@ pony update task_20260405_123456_789 -s running
 - `--json` - JSON output
 
 **`pony update`**
+
 - `-s, --status <status>` - New status
 - `-p, --priority <level>` - New priority
 - `-t, --title <title>` - New title
@@ -102,12 +105,12 @@ pony update task_20260405_123456_789 -s running
 
 ### Task Status Transitions
 
-| From | To |
-|------|-----|
-| `pending` | `running`, `cancelled` |
-| `running` | `completed`, `pending`, `cancelled` |
-| `completed` | `pending` (reopen) |
-| `cancelled` | `pending` (reactivate) |
+| From        | To                                  |
+| ----------- | ----------------------------------- |
+| `pending`   | `running`, `cancelled`              |
+| `running`   | `completed`, `pending`, `cancelled` |
+| `completed` | `pending` (reopen)                  |
+| `cancelled` | `pending` (reactivate)              |
 
 ## HUD Statusline
 
@@ -120,12 +123,12 @@ tasks: 5 total | pending: 2 | running: 1 | completed: 2
 
 ### Color Gradients
 
-| Element | Levels |
-|---------|--------|
-| Session | Gray → Green (15m) → Blue (30m) → Yellow (45m) → Magenta (60m) → Red (>60m) |
+| Element | Levels                                                                           |
+| ------- | -------------------------------------------------------------------------------- |
+| Session | Gray → Green (15m) → Blue (30m) → Yellow (45m) → Magenta (60m) → Red (>60m)      |
 | Context | Gray (0%) → Green (35%) → Blue (50%) → Yellow (65%) → Magenta (80%) → Red (>80%) |
-| Agents | Green (1) → Blue (2) → Yellow (3) → Magenta (4) → Red (5+) |
-| Tools | Green (1-9) → Blue (10-49) → Yellow (50-99) → Magenta (100-199) → Red (200+) |
+| Agents  | Green (1) → Blue (2) → Yellow (3) → Magenta (4) → Red (5+)                       |
+| Tools   | Green (1-9) → Blue (10-49) → Yellow (50-99) → Magenta (100-199) → Red (200+)     |
 
 ### HUD Commands
 
@@ -139,12 +142,12 @@ pony hud status  # Show configuration
 
 Tasks are automatically routed to specialized agents based on tags:
 
-| Tag | Agent | Model | Use Case |
-|-----|-------|-------|----------|
-| `plan`, `design`, `architecture` | planner | opus | Planning, requirements |
-| `search`, `find`, `explore` | explorer | haiku | Code search |
-| `verify`, `test`, `review` | verifier | sonnet | Testing, validation |
-| `implement`, `code`, `fix` | executor | sonnet | Implementation |
+| Tag                              | Agent    | Model  | Use Case               |
+| -------------------------------- | -------- | ------ | ---------------------- |
+| `plan`, `design`, `architecture` | planner  | opus   | Planning, requirements |
+| `search`, `find`, `explore`      | explorer | haiku  | Code search            |
+| `verify`, `test`, `review`       | verifier | sonnet | Testing, validation    |
+| `implement`, `code`, `fix`       | executor | sonnet | Implementation         |
 
 ### Default Pipeline
 
@@ -154,12 +157,12 @@ Tasks without special tags follow: **planner → executor → verifier**
 
 When installed as a Claude Code plugin, Pony provides these skills:
 
-| Skill | Description |
-|-------|-------------|
+| Skill        | Description                         |
+| ------------ | ----------------------------------- |
 | `/pony:init` | Initialize Pony for current session |
-| `/pony:task` | Task management operations |
-| `/pony:hud` | HUD configuration |
-| `/pony:run` | Execute task orchestration loop |
+| `/pony:task` | Task management operations          |
+| `/pony:hud`  | HUD configuration                   |
+| `/pony:run`  | Execute task orchestration loop     |
 
 ## Data Storage
 

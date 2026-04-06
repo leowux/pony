@@ -1,3 +1,8 @@
+---
+description: Pony task management commands
+argument-hint: '<add|list|get|update|delete|next> [options]'
+---
+
 # Pony Task Commands
 
 Pony provides the following task management commands:

@@ -1,3 +1,8 @@
+---
+description: Initialize Pony task management system
+argument-hint: ''
+---
+
 Initialize Pony task management system.
 
 ```bash

@@ -60,26 +60,27 @@ pony update task_20260405_123456_789 -s running
 
 ### 任务命令
 
-| 命令 | 描述 |
-|------|------|
-| `pony add <标题>` | 创建新任务 |
-| `pony list` | 列出所有任务及统计 |
-| `pony get <任务ID>` | 显示任务详情 |
-| `pony update <任务ID>` | 更新任务属性 |
+| 命令                   | 描述                         |
+| ---------------------- | ---------------------------- |
+| `pony add <标题>`      | 创建新任务                   |
+| `pony list`            | 列出所有任务及统计           |
+| `pony get <任务ID>`    | 显示任务详情                 |
+| `pony update <任务ID>` | 更新任务属性                 |
 | `pony delete [任务ID]` | 删除任务或批量删除已完成任务 |
-| `pony next` | 获取下一个可开始的任务 |
+| `pony next`            | 获取下一个可开始的任务       |
 
 ### 系统命令
 
-| 命令 | 描述 |
-|------|------|
-| `pony init` | 初始化 Pony 存储 |
-| `pony hud [操作]` | 管理 HUD 状态栏 |
-| `pony logs` | 查看日志（支持过滤） |
+| 命令              | 描述                 |
+| ----------------- | -------------------- |
+| `pony init`       | 初始化 Pony 存储     |
+| `pony hud [操作]` | 管理 HUD 状态栏      |
+| `pony logs`       | 查看日志（支持过滤） |
 
 ### 任务选项
 
 **`pony add`**
+
 - `-p, --priority <级别>` - 优先级：`high`、`medium`、`low`
 - `-d, --depends-on <IDs>` - 依赖任务 ID
 - `-t, --tag <标签>` - 用于代理路由的标签
@@ -88,6 +89,7 @@ pony update task_20260405_123456_789 -s running
 - `--project <路径>` - 项目关联
 
 **`pony list`**
+
 - `-s, --status <状态>` - 按状态筛选
 - `-o, --owner <名称>` - 按负责人筛选
 - `-p, --project <名称>` - 按项目筛选
@@ -95,6 +97,7 @@ pony update task_20260405_123456_789 -s running
 - `--json` - JSON 格式输出
 
 **`pony update`**
+
 - `-s, --status <状态>` - 新状态
 - `-p, --priority <级别>` - 新优先级
 - `-t, --title <标题>` - 新标题
@@ -102,12 +105,12 @@ pony update task_20260405_123456_789 -s running
 
 ### 任务状态转换
 
-| 从 | 到 |
-|----|-----|
-| `pending` | `running`、`cancelled` |
-| `running` | `completed`、`pending`、`cancelled` |
-| `completed` | `pending`（重开） |
-| `cancelled` | `pending`（激活） |
+| 从          | 到                                  |
+| ----------- | ----------------------------------- |
+| `pending`   | `running`、`cancelled`              |
+| `running`   | `completed`、`pending`、`cancelled` |
+| `completed` | `pending`（重开）                   |
+| `cancelled` | `pending`（激活）                   |
 
 ## HUD 状态栏
 
@@ -120,12 +123,12 @@ tasks: 5 total | pending: 2 | running: 1 | completed: 2
 
 ### 颜色渐变
 
-| 元素 | 级别 |
-|------|------|
-| 会话时长 | 灰色 → 绿色(15m) → 蓝色(30m) → 黄色(45m) → 紫色(60m) → 红色(>60m) |
-| 上下文 | 灰色(0%) → 绿色(35%) → 蓝色(50%) → 黄色(65%) → 紫色(80%) → 红色(>80%) |
-| 代理数 | 绿色(1) → 蓝色(2) → 黄色(3) → 紫色(4) → 红色(5+) |
-| 工具调用 | 绿色(1-9) → 蓝色(10-49) → 黄色(50-99) → 紫色(100-199) → 红色(200+) |
+| 元素     | 级别                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 会话时长 | 灰色 → 绿色(15m) → 蓝色(30m) → 黄色(45m) → 紫色(60m) → 红色(>60m)     |
+| 上下文   | 灰色(0%) → 绿色(35%) → 蓝色(50%) → 黄色(65%) → 紫色(80%) → 红色(>80%) |
+| 代理数   | 绿色(1) → 蓝色(2) → 黄色(3) → 紫色(4) → 红色(5+)                      |
+| 工具调用 | 绿色(1-9) → 蓝色(10-49) → 黄色(50-99) → 紫色(100-199) → 红色(200+)    |
 
 ### HUD 命令
 
@@ -139,12 +142,12 @@ pony hud status  # 显示配置
 
 任务根据标签自动路由到专门的代理：
 
-| 标签 | 代理 | 模型 | 用途 |
-|------|------|------|------|
-| `plan`、`design`、`architecture` | planner | opus | 规划、需求分析 |
-| `search`、`find`、`explore` | explorer | haiku | 代码搜索 |
-| `verify`、`test`、`review` | verifier | sonnet | 测试、验证 |
-| `implement`、`code`、`fix` | executor | sonnet | 实现 |
+| 标签                             | 代理     | 模型   | 用途           |
+| -------------------------------- | -------- | ------ | -------------- |
+| `plan`、`design`、`architecture` | planner  | opus   | 规划、需求分析 |
+| `search`、`find`、`explore`      | explorer | haiku  | 代码搜索       |
+| `verify`、`test`、`review`       | verifier | sonnet | 测试、验证     |
+| `implement`、`code`、`fix`       | executor | sonnet | 实现           |
 
 ### 默认流程
 
@@ -154,12 +157,12 @@ pony hud status  # 显示配置
 
 作为 Claude Code 插件安装后，Pony 提供以下 skills：
 
-| Skill | 描述 |
-|-------|------|
+| Skill        | 描述                  |
+| ------------ | --------------------- |
 | `/pony:init` | 为当前会话初始化 Pony |
-| `/pony:task` | 任务管理操作 |
-| `/pony:hud` | HUD 配置 |
-| `/pony:run` | 执行任务编排循环 |
+| `/pony:task` | 任务管理操作          |
+| `/pony:hud`  | HUD 配置              |
+| `/pony:run`  | 执行任务编排循环      |
 
 ## 数据存储
 
