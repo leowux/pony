@@ -48,16 +48,25 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
+      - name: Configure npm
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=\${NPM_TOKEN}
+          EOF
+
       # Manual trigger: run release-it (bumps version, creates tag, publishes)
       - name: Release (manual - dry-run)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: pnpm release:dry
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release (manual)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run }}
         run: pnpm release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Tag trigger: just publish to npm (version already in tag)
@@ -65,4 +74,4 @@ jobs:
         if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
