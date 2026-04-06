@@ -5,7 +5,12 @@
  */
 
 import { existsSync, readFileSync } from 'fs';
-import { DEFAULT_PONY_CONFIG, type PonyConfig } from '../types.js';
+import {
+  DEFAULT_PONY_CONFIG,
+  PRESET_CONFIGS,
+  type PonyConfig,
+  type PonyHudElementConfig,
+} from '../types.js';
 import { getConfigPath, getGlobalPonyRoot } from './worktree-paths.js';
 import { atomicWriteJson, ensureDir } from './atomic-write.js';
 import { createLogger } from './logger.js';
@@ -72,4 +77,71 @@ export function updateHudConfig(updates: Partial<PonyConfig['hud']>): PonyConfig
  */
 export function isHudEnabled(): boolean {
   return readHudConfig().hud.enabled;
+}
+
+/**
+ * Apply a preset to HUD config.
+ * Merges preset elements with existing config.
+ */
+export function applyHudPreset(preset: PonyConfig['hud']['preset']): PonyConfig {
+  const existing = readHudConfig();
+  const presetElements = PRESET_CONFIGS[preset];
+
+  const updated: PonyConfig = {
+    ...existing,
+    hud: {
+      ...existing.hud,
+      preset,
+      elements: {
+        ...existing.hud.elements,
+        ...presetElements,
+      },
+    },
+  };
+  writeHudConfig(updated);
+  log.info('HUD preset applied', { preset });
+  return updated;
+}
+
+/**
+ * Update specific HUD element visibility.
+ */
+export function updateHudElement(
+  element: keyof PonyHudElementConfig,
+  enabled: boolean,
+): PonyConfig {
+  const existing = readHudConfig();
+  const updated: PonyConfig = {
+    ...existing,
+    hud: {
+      ...existing.hud,
+      elements: {
+        ...existing.hud.elements,
+        [element]: enabled,
+      },
+    },
+  };
+  writeHudConfig(updated);
+  log.info('HUD element updated', { element, enabled });
+  return updated;
+}
+
+/**
+ * Bulk update HUD elements.
+ */
+export function updateHudElements(elements: Partial<PonyHudElementConfig>): PonyConfig {
+  const existing = readHudConfig();
+  const updated: PonyConfig = {
+    ...existing,
+    hud: {
+      ...existing.hud,
+      elements: {
+        ...existing.hud.elements,
+        ...elements,
+      },
+    },
+  };
+  writeHudConfig(updated);
+  log.info('HUD elements bulk updated', { elements });
+  return updated;
 }

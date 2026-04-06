@@ -143,6 +143,45 @@ export function getCachePath(): string {
   return join(getGlobalPonyRoot(), 'cache');
 }
 
+// ─── Requirements Paths ────────────────────────────────────────────────────────
+
+/**
+ * Get the requirements directory path for a task.
+ */
+export function getRequirementsPath(taskId: string): string {
+  return join(getTaskPath(taskId), 'requirements');
+}
+
+/**
+ * Get the main requirement file path.
+ */
+export function getRequirementFilePath(taskId: string): string {
+  return join(getRequirementsPath(taskId), 'requirement.md');
+}
+
+/**
+ * Get a supplemental file path for additional requirements.
+ */
+export function getSupplementalFilePath(taskId: string, index: number): string {
+  return join(getRequirementsPath(taskId), `supplemental-${index}.md`);
+}
+
+// ─── Reports Paths ─────────────────────────────────────────────────────────────
+
+/**
+ * Get the reports directory path for a task.
+ */
+export function getReportsPath(taskId: string): string {
+  return join(getTaskPath(taskId), 'reports');
+}
+
+/**
+ * Get an agent report file path.
+ */
+export function getAgentReportPath(taskId: string, agentName: string): string {
+  return join(getReportsPath(taskId), `${agentName}-report.md`);
+}
+
 // ─── Project Info ──────────────────────────────────────────────────────────────
 
 /**

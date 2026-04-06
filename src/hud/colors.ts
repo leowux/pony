@@ -32,7 +32,7 @@ export const ansi = {
   brightWhite: '\x1b[97m',
 };
 
-type ColorName = keyof typeof ansi;
+export type ColorName = keyof typeof ansi;
 
 /**
  * Check if output should be colorized.

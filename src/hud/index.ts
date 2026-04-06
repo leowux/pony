@@ -5,6 +5,8 @@
  * Receives stdin JSON from Claude Code and outputs formatted statusline.
  */
 
+import path from 'node:path';
+import fs from 'node:fs';
 import {
   readStdin,
   getContextPercent,
@@ -25,6 +27,25 @@ import { createLogger } from '../lib/logger.js';
 const log = createLogger({ module: 'hud' });
 
 /**
+ * Get git branch name from working directory.
+ * Reads .git/HEAD file directly (faster than subprocess).
+ */
+function getGitBranch(cwd: string): string | null {
+  try {
+    const gitHeadPath = path.join(cwd, '.git', 'HEAD');
+    if (!fs.existsSync(gitHeadPath)) return null;
+    const headContent = fs.readFileSync(gitHeadPath, 'utf-8').trim();
+    // Format: "ref: refs/heads/branch-name" or "commit-hash" (detached)
+    if (headContent.startsWith('ref: refs/heads/')) {
+      return headContent.replace('ref: refs/heads/', '');
+    }
+    return null; // detached HEAD or other cases
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Main HUD entry point.
  */
 async function main(): Promise<void> {
@@ -32,7 +53,7 @@ async function main(): Promise<void> {
     // Read config and check if HUD is enabled
     const config = readHudConfig();
     if (!config.hud.enabled) {
-      console.log('[Pony] HUD disabled');
+      // True silence - no output at all
       return;
     }
 
@@ -98,7 +119,12 @@ async function main(): Promise<void> {
       activeAgentsCount: transcriptStats.agentCallCount,
       activeToolsCount: transcriptStats.toolCallCount,
       activeSkillsCount: transcriptStats.skillCallCount,
+      inputTokens: transcriptStats.inputTokens,
+      outputTokens: transcriptStats.outputTokens,
+      cacheCreationTokens: transcriptStats.cacheCreationTokens,
+      cacheReadTokens: transcriptStats.cacheReadTokens,
       cwd,
+      branchName: getGitBranch(cwd),
       hudState: hudState || undefined,
     };
 
