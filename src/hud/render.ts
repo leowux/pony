@@ -113,7 +113,7 @@ export function render(context: PonyHudContext, config: PonyConfig): string {
   // ─── Line 2: Tasks ────────────────────────────────────────────────────────────
 
   let line2 = '';
-  if (enabledElements.tasks) {
+  if (enabledElements.tasks && context.taskSummary.total > 0) {
     line2 = renderTasksElement({ summary: context.taskSummary });
   }
 

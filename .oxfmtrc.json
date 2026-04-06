@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/oxlint/format_schema.json",
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "indentWidth": 2,
+  "lineWidth": 100,
+  "ignorePatterns": ["dist/**", "node_modules/**", ".pony/**", ".omc/**", "*.mjs"]
+}
