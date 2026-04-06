@@ -69,6 +69,17 @@ pony update task_20260405_123456_789 -s running
 | `pony delete [taskId]` | Delete task or bulk delete completed |
 | `pony next`            | Get next task ready to start         |
 
+### Todo Commands
+
+Quick todo lists for simple task tracking:
+
+| Command            | Description            |
+| ------------------ | ---------------------- |
+| `pony todo <text>` | Add a quick todo item  |
+| `pony todo list`   | List all todos         |
+| `pony todo done`   | Mark todo as completed |
+| `pony todo clear`  | Clear completed todos  |
+
 ### System Commands
 
 | Command             | Description              |
@@ -117,9 +128,23 @@ pony update task_20260405_123456_789 -s running
 Pony provides a two-line HUD for Claude Code statusline:
 
 ```
-[Pony] | session: 15m | ctx: 45% | agents: 2 | tools: 12 | skills: 1
+[Pony] | session: 15m | ctx: 45% | tokens: 50K | agents: 2 | tools: 12 | skills: 1
 tasks: 5 total | pending: 2 | running: 1 | completed: 2
 ```
+
+**Note**: The second line (tasks) is hidden when there are no tasks.
+
+### Display Elements
+
+| Element | Description                          |
+| ------- | ------------------------------------ |
+| session | Session duration with color gradient |
+| ctx     | Context window usage percentage      |
+| tokens  | Input/output token consumption       |
+| agents  | Active agent count                   |
+| tools   | Tool call count                      |
+| skills  | Skill invocation count               |
+| tasks   | Task status summary (line 2)         |
 
 ### Color Gradients
 
@@ -198,6 +223,23 @@ Run CLI locally:
 ```bash
 node dist/cli/index.mjs <command>
 ```
+
+## Release
+
+Pony uses automated CI/CD for npm publishing:
+
+**Automatic (push tag):**
+
+```bash
+git tag v0.0.2 && git push --tags
+```
+
+**Manual (GitHub Actions):**
+
+1. Actions → Release → Run workflow
+2. Select version bump type
+
+See [CLAUDE.md](./CLAUDE.md) for CI/CD details.
 
 ## License
 

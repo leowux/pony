@@ -69,6 +69,17 @@ pony update task_20260405_123456_789 -s running
 | `pony delete [任务ID]` | 删除任务或批量删除已完成任务 |
 | `pony next`            | 获取下一个可开始的任务       |
 
+### Todo 命令
+
+快速待办清单，用于简单任务追踪：
+
+| 命令               | 描述             |
+| ------------------ | ---------------- |
+| `pony todo <文本>` | 添加快速待办项   |
+| `pony todo list`   | 列出所有待办     |
+| `pony todo done`   | 标记待办为已完成 |
+| `pony todo clear`  | 清除已完成的待办 |
+
 ### 系统命令
 
 | 命令              | 描述                 |
@@ -117,9 +128,23 @@ pony update task_20260405_123456_789 -s running
 Pony 为 Claude Code 状态栏提供两行 HUD 显示：
 
 ```
-[Pony] | session: 15m | ctx: 45% | agents: 2 | tools: 12 | skills: 1
+[Pony] | session: 15m | ctx: 45% | tokens: 50K | agents: 2 | tools: 12 | skills: 1
 tasks: 5 total | pending: 2 | running: 1 | completed: 2
 ```
+
+**注意**：当没有任务时，第二行（任务统计）会自动隐藏。
+
+### 显示元素
+
+| 元素    | 描述                   |
+| ------- | ---------------------- |
+| session | 会话时长，带颜色渐变   |
+| ctx     | 上下文窗口使用百分比   |
+| tokens  | 输入/输出 token 消耗   |
+| agents  | 活跃代理数量           |
+| tools   | 工具调用次数           |
+| skills  | Skill 调用次数         |
+| tasks   | 任务状态统计（第二行） |
 
 ### 颜色渐变
 
@@ -198,6 +223,23 @@ pnpm clean       # 清理 dist/
 ```bash
 node dist/cli/index.mjs <命令>
 ```
+
+## 发布
+
+Pony 使用自动化 CI/CD 进行 npm 发布：
+
+**自动方式（推送标签）：**
+
+```bash
+git tag v0.0.2 && git push --tags
+```
+
+**手动方式（GitHub Actions）：**
+
+1. Actions → Release → Run workflow
+2. 选择版本升级类型
+
+详见 [CLAUDE.md](./CLAUDE.md) 中的 CI/CD 说明。
 
 ## 许可证
 

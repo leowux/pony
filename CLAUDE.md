@@ -117,3 +117,46 @@ claude plugin install pony@pony
 | "Duplicate hooks file detected"         | `hooks/hooks.json` referenced in plugin.json          | Remove hooks field from plugin.json |
 | "Unrecognized key: statusline"          | statusline in plugin.json                             | Move to settings.json               |
 | "Invalid key in record" for hooks       | Invalid hook type like `StatusLineUpdate`             | Use valid hook types only           |
+
+## CI/CD
+
+### Workflows
+
+- **CI** (`.github/workflows/ci.yml`) - Runs on push/PR to main
+  - `pnpm check` - Format, lint, typecheck
+  - `pnpm test` - Run tests
+  - `pnpm build` - Build verification
+
+- **Release** (`.github/workflows/release.yml`) - Automated npm publishing
+  - Triggered by: push of `v*` tags OR manual workflow_dispatch
+  - Runs quality checks before publishing
+  - Uses `release-it` for version management
+
+### Release Process
+
+**Option 1: Push version tag (automatic)**
+
+```bash
+git tag v0.0.2
+git push origin v0.0.2
+```
+
+**Option 2: Manual trigger via GitHub Actions**
+
+1. Go to Actions → Release → Run workflow
+2. Select version type (patch/minor/major)
+3. Workflow runs release-it (bumps version, creates tag, publishes)
+
+### Conventional Commits
+
+This project uses conventional commits for automatic version detection:
+
+| Type                         | Version Bump |
+| ---------------------------- | ------------ |
+| `feat:`                      | MINOR        |
+| `fix:`, `perf:`, `refactor:` | PATCH        |
+| `BREAKING CHANGE:`           | MAJOR        |
+
+### Required Secrets
+
+- `NPM_TOKEN` - npm registry access token (configured in repo Settings → Secrets)
