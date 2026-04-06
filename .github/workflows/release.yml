@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
+          scope: ''
 
       - uses: pnpm/action-setup@v4
 
@@ -48,30 +49,23 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - name: Configure npm
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=\${NPM_TOKEN}
-          EOF
+      - name: Configure npm for release-it
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       # Manual trigger: run release-it (bumps version, creates tag, publishes)
       - name: Release (manual - dry-run)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: pnpm release:dry
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release (manual)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run }}
         run: pnpm release
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Tag trigger: just publish to npm (version already in tag)
       - name: Publish to npm (tag trigger)
         if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
         run: npm publish --provenance --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
