@@ -1,5 +1,8 @@
 name: Release
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
@@ -45,13 +48,21 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - name: Release (dry-run)
-        if: ${{ inputs.dry_run }}
+      # Manual trigger: run release-it (bumps version, creates tag, publishes)
+      - name: Release (manual - dry-run)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
         run: pnpm release:dry
 
-      - name: Release
-        if: ${{ !inputs.dry_run }}
+      - name: Release (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dry_run }}
         run: pnpm release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Tag trigger: just publish to npm (version already in tag)
+      - name: Publish to npm (tag trigger)
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
