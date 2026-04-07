@@ -13,13 +13,6 @@ dist/
 # OMC runtime state
 .omc/
 
-# Claude plugin components are now tracked
-# .claude-plugin/
-# agents/
-# hooks/
-# scripts/
-# skills/
-
 # IDE
 .vscode/
 .idea/

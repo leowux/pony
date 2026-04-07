@@ -57,14 +57,8 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@10.33.0",
-  "pnpm": {
-    "overrides": {
-      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
-    }
-  },
   "publishConfig": {
     "registry": "https://registry.antgroup-inc.cn"
-  }
+  },
+  "repository": "git@github.com:leowux/pony.git"
 }
