@@ -1,12 +1,13 @@
 {
-  "name": "pony-cli",
-  "version": "0.0.1",
-  "description": "Lightweight task management for Claude Code sessions",
+  "name": "@alipay/pony-cli",
+  "version": "0.0.2",
+  "description": "Lightweight task management for Claude Code sessions with multi-agent orchestration",
   "keywords": [
     "claude-code",
     "plugin",
     "productivity",
-    "task-management"
+    "task-management",
+    "agent-orchestration"
   ],
   "license": "MIT",
   "author": {
@@ -17,6 +18,10 @@
   },
   "files": [
     "dist/",
+    ".claude-plugin/",
+    ".claude-plugin.json",
+    "commands/",
+    "agents/",
     "README.md",
     "LICENSE"
   ],
@@ -58,5 +63,8 @@
       "vite": "npm:@voidzero-dev/vite-plus-core@latest",
       "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
     }
+  },
+  "publishConfig": {
+    "registry": "https://registry.antgroup-inc.cn"
   }
 }

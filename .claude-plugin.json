@@ -1,0 +1,9 @@
+{
+  "name": "pony",
+  "package": "@alipay/pony-cli",
+  "files": {
+    ".claude-plugin": ".claude-plugin/",
+    "commands": "commands/",
+    "agents": "agents/"
+  }
+}

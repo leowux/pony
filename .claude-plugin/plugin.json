@@ -1,0 +1,20 @@
+{
+  "name": "pony",
+  "description": "Lightweight task management for Claude Code sessions with multi-agent orchestration",
+  "version": "0.0.2",
+  "author": {
+    "name": "wuwenbang"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "productivity",
+    "task-management",
+    "agent-orchestration"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@code.alipay.com:wuwenbang.wwb/pony.git"
+  }
+}
